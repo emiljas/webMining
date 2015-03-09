@@ -14,7 +14,7 @@ request.get({
       uri: url,
       encoding: null
     },
-    function (err, resp, body) {
+    function (err, res, body) {
       var encoding = charsetDetector.detectCharset(body).toString();
 
       var content = iconv.decode(body, encoding);
