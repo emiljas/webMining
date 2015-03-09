@@ -32,7 +32,7 @@ describe("cleanHtml", function() {
   });
 
   it("decode html entities", function() {
-    checkHtml("&apos;something&apos;", "'something'")
+    checkHtml("&ouml;something&ouml;", "ösomethingö")
   });
 
   it("removeStartingEmptyLines", function() {
@@ -42,6 +42,14 @@ describe("cleanHtml", function() {
   it("removeEndingEmptyLines", function() {
     checkHtml("a\n\n", "a");
   });
+
+    it("remove punctuation marks", function() {
+        checkHtml("a,b.", "ab");
+    });
+
+    it("to lower", function() {
+        checkHtml("AbC", "abc");
+    });
 
   function checkHtml(input, expected) {
     var result = cleanHtml(input);
