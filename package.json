@@ -7,15 +7,18 @@
     "test": "test"
   },
   "dependencies": {
-    "html-entities": "^1.1.2",
-    "sanitize-html": "^1.6.1",
+    "charset": "^1.0.0",
     "encoding": "~0.1.11",
+    "html-entities": "^1.1.2",
+    "iconv-lite": "^0.4.7",
     "request": "~2.53.0",
-    "iconv": "~2.1.6"
+    "sanitize-html": "^1.6.1"
   },
   "devDependencies": {
     "chai": "^2.1.1",
     "mocha": "^2.2.0",
+    "mock-fs": "^2.5.0",
+    "nock": "^1.1.0",
     "sinon": "^1.13.0"
   },
   "scripts": {

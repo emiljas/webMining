@@ -1,31 +1,21 @@
 var fs = require("fs");
 var path = require("path");
-var iconv = require('iconv-lite');
 var cleanHtml = require("./cleanHtml.js");
-var request = require("request");
-var charsetDetector = require("node-icu-charset-detector");
+var downloadPage = require("./downloadPage.js");
 
 var tmpDirtyPagePath = path.resolve(process.cwd(), "tmp/dirtyPage.html");
 var tmpCleanPagePath = path.resolve(process.cwd(), "tmp/cleanPage.html");
 
 var url = process.argv[2];
 
-request.get({
-      uri: url,
-      encoding: null
-    },
-    function (err, res, body) {
-      var encoding = charsetDetector.detectCharset(body).toString();
+downloadPage(url, function(html) {
+  saveToFile(tmpDirtyPagePath, html);
 
-      var content = iconv.decode(body, encoding);
+  html = cleanHtml(html);
 
-      saveToFile(tmpDirtyPagePath, content);
+  saveToFile(tmpCleanPagePath, html);
+});
 
-      content = cleanHtml(content);
-
-      saveToFile(tmpCleanPagePath, content);
-    }
-);
 
 function saveToFile(path, content) {
   fs.writeFile(path, content, function (err) {
