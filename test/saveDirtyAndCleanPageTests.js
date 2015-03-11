@@ -4,12 +4,11 @@ var fs = require("fs");
 var path = require("path");
 var sinon = require("sinon");
 
-//TODO:PROBLEM Z ZAPISEM DIRTY PAGE
-
 var saveDirtyAndCleanPage = require("../src/saveDirtyAndCleanPage.js");
 
 var testAddress = "http://www.google.pl";
-var testPageHtml = "html";
+var pageHtml = "<html>content</html>";
+var cleanPageHtml = "content";
 var dirtyPagePath = path.resolve(process.cwd(), "tmp/dirtyPage.html");
 var cleanPagePath = path.resolve(process.cwd(), "tmp/cleanPage.txt");
 
@@ -18,28 +17,43 @@ describe("saveDirtyAndCleanPage", function() {
     mockFs(dirtyPagePath, cleanPagePath);
 
     var downloadPage = sinon.spy();
-    saveDirtyAndCleanPage(testAddress, downloadPage, function() {});
+    saveDirtyAndCleanPage(testAddress, function() {}, downloadPage, function() {});
 
     assert.isTrue(downloadPage.calledOnce);
     assert.isTrue(downloadPage.calledWith(testAddress));
   });
 
   it("dirty page is saved to file", function(done) {
-    mockFs(dirtyPagePath, cleanPagePath);
+    mockTmpDir();
+    saveDirtyAndCleanPage(testAddress, function() {
+        fs.readFile(dirtyPagePath, function(err, content) {
+          assert.equal(content, pageHtml);
+          done();
+        });
+    }, downloadPage, cleanHtml);
+  });
 
-    var downloadPage = function(url, callback) {
-      return callback(testPageHtml);
-    };
-    var cleanHtml = function(html) {
-      return html + " after cleaning";
-    };
-    saveDirtyAndCleanPage(testAddress, downloadPage, cleanHtml);
-
-    setTimeout(function() {
-      fs.readFile(dirtyPagePath, function(err, content) {
-        assert.equal(testPageHtml, content);
+  it("clean page is saved to file", function(done) {
+    mockTmpDir();
+    saveDirtyAndCleanPage(testAddress, function() {
+      fs.readFile(cleanPagePath, function(err, content) {
+        assert.equal(content, cleanPageHtml);
         done();
       });
-    }, 1000);
+    }, downloadPage, cleanHtml);
   });
+
+  function downloadPage(url, callback) {
+    callback(pageHtml);
+  }
+
+  function cleanHtml(html) {
+    return cleanPageHtml;
+  }
+
+  function mockTmpDir() {
+    var mockedDirs = {};
+    mockedDirs[path.resolve(process.cwd(), "tmp")] = {};
+    mockFs(mockedDirs);
+  }
 });
