@@ -56,4 +56,8 @@ describe("saveDirtyAndCleanPage", function() {
     mockedDirs[path.resolve(process.cwd(), "tmp")] = {};
     mockFs(mockedDirs);
   }
+
+  afterEach(function(){
+    mockFs.restore();
+  })
 });
