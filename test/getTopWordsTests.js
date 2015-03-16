@@ -5,7 +5,7 @@ var getTopWords = require("../src/getTopWords");
 describe("getTopWords", function() {
 
   it("get top words", function() {
-    var words = getTopWords("a a b a b c a");
+    var words = getTopWords("b a b c a a a");
 
     assert.equal(words.length, 3);
 
@@ -39,5 +39,17 @@ describe("getTopWords", function() {
     assert.equal(words[0].word, "a");
     assert.equal(words[0].n, 4);
   });
+
+  //it("works with number as words", function() {
+  //  var words = getTopWords("word 5 word", 2);
+  //
+  //  assert.equal(words.length, 2);
+  //
+  //  assert.equal(words[0].word, "word");
+  //  assert.equal(words[0].n, 2);
+  //
+  //  assert.equal(words[1].word, "5");
+  //  assert.equal(words[1].n, 1);
+  //});
 
 });

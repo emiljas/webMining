@@ -1,7 +1,7 @@
 function getTopWords(content, k, tresh) {
   var words = content.split(" ");
   var dict = groupWords(words);
-  sortByOccurrences(dict);
+  dict = sortByOccurrences(dict);
   return getTop(dict, k, tresh);
 }
 
@@ -18,22 +18,26 @@ function groupWords(words) {
 }
 
 function sortByOccurrences(dict) {
-  dict.sort(function (a, b) {
-    if (a.n < b.n)
-      return -1;
-    else if (a.n > b.n)
-      return 1;
-    else
-      return 0;
+  var temp = [];
+  for(var word in dict) {
+    temp.push(dict[word]);
+  }
+
+  temp.sort(function (a, b) {
+    return b.n - a.n;
   });
+
+  return temp;
 }
 
 function getTop(dict, k, tresh) {
   var top = [];
-  for (var word in dict) {
-    if (dict[word].n < tresh)
+  for (var i = 0; i < dict.length; i++) {
+    var word = dict[i];
+    if (word.n < tresh)
       break;
-    top.push(dict[word]);
+    if(word.word)
+      top.push(word);
     k--;
     if (k === 0)
       break;
