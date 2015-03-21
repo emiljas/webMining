@@ -40,16 +40,4 @@ describe("getTopWords", function() {
     assert.equal(words[0].n, 4);
   });
 
-  //it("works with number as words", function() {
-  //  var words = getTopWords("word 5 word", 2);
-  //
-  //  assert.equal(words.length, 2);
-  //
-  //  assert.equal(words[0].word, "word");
-  //  assert.equal(words[0].n, 2);
-  //
-  //  assert.equal(words[1].word, "5");
-  //  assert.equal(words[1].n, 1);
-  //});
-
 });
