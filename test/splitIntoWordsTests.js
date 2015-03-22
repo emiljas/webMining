@@ -8,7 +8,7 @@ describe("splitIntoWords", function() {
   });
 
   it("exclude empty words", function() {
-    var words = splitIntoWords("a  b c");
+    var words = splitIntoWords("a   b c");
     assert.deepEqual(words, ["a", "b", "c"]);
   });
 });

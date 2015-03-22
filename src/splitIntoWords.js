@@ -1,14 +1,13 @@
 function splitIntoWords(text) {
   var words = text.split(" ");
-  removeEmpty(words);
+  removeEmpty(words)
   return words;
 }
 
 function removeEmpty(words) {
-  words.forEach(function (word, index) {
-    if (!word)
-      words.splice(index, 1);
-  });
+  for(var i = words.length - 1; i >= 0; i--)
+    if(!words[i])
+      words.splice(i, 1);
 }
 
 module.exports = splitIntoWords;

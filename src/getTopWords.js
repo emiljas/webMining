@@ -1,7 +1,8 @@
+var splitIntoWords = require("./splitIntoWords");
 var groupWords = require("./groupWords");
 
 function getTopWords(content, k, tresh) {
-  var words = content.split(" ");
+  var words = splitIntoWords(content);
   var dict = groupWords(words);
   dict = sortByOccurrences(dict);
   return getTop(dict, k, tresh);
@@ -26,8 +27,7 @@ function getTop(dict, k, tresh) {
     var word = dict[i];
     if (word.n < tresh)
       break;
-    if(word.word)
-      top.push(word);
+    top.push(word);
     k--;
     if (k === 0)
       break;
