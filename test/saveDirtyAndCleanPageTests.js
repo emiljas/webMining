@@ -3,8 +3,7 @@ var mockFs = require("mock-fs");
 var fs = require("fs");
 var path = require("path");
 var sinon = require("sinon");
-
-var saveDirtyAndCleanPage = require("../src/saveDirtyAndCleanPage.js");
+var proxyquire = require("proxyquire");
 
 var testAddress = "http://www.google.pl";
 var pageHtml = "<html>content</html>";
@@ -13,34 +12,50 @@ var dirtyPagePath = path.resolve(process.cwd(), "tmp/dirtyPage.html");
 var cleanPagePath = path.resolve(process.cwd(), "tmp/cleanPage.txt");
 
 describe("saveDirtyAndCleanPage", function() {
+
   it("downloadPage is called once", function() {
+    var downloadPage = sinon.spy();
+    var saveDirtyAndCleanPage = proxyquire("../src/saveDirtyAndCleanPage.js", {
+      "./downloadPage": downloadPage,
+      "./cleanHtml": function () {}
+    });
+
     mockFs(dirtyPagePath, cleanPagePath);
 
-    var downloadPage = sinon.spy();
-    saveDirtyAndCleanPage(testAddress, function() {}, downloadPage, function() {});
+    saveDirtyAndCleanPage(testAddress, function() {});
 
     assert.isTrue(downloadPage.calledOnce);
     assert.isTrue(downloadPage.calledWith(testAddress));
   });
 
   it("dirty page is saved to file", function(done) {
+    var saveDirtyAndCleanPage = proxyquire("../src/saveDirtyAndCleanPage.js", {
+      "./downloadPage": downloadPage,
+      "./cleanHtml": cleanHtml
+    });
+
     mockTmpDir();
     saveDirtyAndCleanPage(testAddress, function() {
         fs.readFile(dirtyPagePath, function(err, content) {
           assert.equal(content, pageHtml);
           done();
         });
-    }, downloadPage, cleanHtml);
+    });
   });
 
   it("clean page is saved to file", function(done) {
+    var saveDirtyAndCleanPage = proxyquire("../src/saveDirtyAndCleanPage.js", {
+      "./downloadPage": downloadPage,
+      "./cleanHtml": cleanHtml
+    });
+
     mockTmpDir();
     saveDirtyAndCleanPage(testAddress, function() {
       fs.readFile(cleanPagePath, function(err, content) {
         assert.equal(content, cleanPageHtml);
         done();
       });
-    }, downloadPage, cleanHtml);
+    });
   });
 
   function downloadPage(url, callback) {

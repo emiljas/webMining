@@ -1,15 +1,14 @@
 var path = require("path");
 var fs = require("fs");
 
+var downloadPage = require("./downloadPage");
+var cleanHtml = require("./cleanHtml");
+
+
 var tmpDirtyPagePath = path.resolve(process.cwd(), "tmp/dirtyPage.html");
 var tmpCleanPagePath = path.resolve(process.cwd(), "tmp/cleanPage.txt");
 
-function saveDirtyAndCleanPage(url, callback, downloadPage, cleanHtml) {
-  if(downloadPage === undefined)
-    downloadPage = require("./downloadPage.js")
-  if(cleanHtml === undefined)
-    cleanHtml = require("./cleanHtml.js");
-
+function saveDirtyAndCleanPage(url, callback) {
   downloadPage(url, function(html) {
     saveToFile(tmpDirtyPagePath, html, function() {
       saveToFile(tmpCleanPagePath, cleanHtml(html), function() {

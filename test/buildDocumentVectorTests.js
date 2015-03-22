@@ -2,7 +2,7 @@ var assert = require("chai").assert;
 
 var buildDocumentVector = require("../src/buildDocumentVector");
 
-describe("DocumentVector", function() {
+describe("buildDocumentVector", function() {
 
   it("build document vector", function() {
     var vector = buildDocumentVector("c a a", ["a", "b", "c", "d"]);
