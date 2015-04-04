@@ -8,13 +8,19 @@ function downloadPage(url, callback) {
        uri: url,
        encoding: null
      }, function (err, res, body) {
-       var encoding = charset(res.headers, body);
-       var content;
-       if(encoding != null)
-         content = iconv.decode(body, encoding);
-       else
-        content = body.toString();
-       callback(content);
+       try {
+         var encoding = charset(res.headers, body);
+         var content;
+         if(encoding != null)
+           content = iconv.decode(body, encoding);
+         else
+           content = body.toString();
+         callback(content);
+       }
+       catch(err) {
+         //console.log(url);
+         throw err;
+       }
      }
   );
 

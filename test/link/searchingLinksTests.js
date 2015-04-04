@@ -13,56 +13,82 @@ var X = "http://www.external.com/x";
 var Y = "http://www.external.com/y";
 var Z = "http://www.external.com/z";
 
-var pages = {};
-pages[ROOT]
-   = linkTo("/a") + linkTo("/b") + linkTo("http://www.external.com/y");
-pages[A]
-   = linkTo("/a") + linkTo("/b");
-pages[B]
-   = "";
-pages[C]
-   = linkTo("http://www.external.com/z");
-pages[X]
-   = linkTo("/c");
-pages[Y]
-   = linkTo("http://www.external.com/x") + linkTo("http://www.external.com/y");
-pages[Z]
-   = "";
+//var pages = {};
+//pages[ROOT]
+//   = linkTo("/a") + linkTo("/b") + linkTo("http://www.external.com/y");
+//pages[A]
+//   = linkTo("/a") + linkTo("/b") + link;
+//pages[B]
+//   = "";
+//pages[C]
+//   = linkTo("http://www.external.com/z");
+//pages[X]
+//   = linkTo("/c");
+//pages[Y]
+//   = linkTo("http://www.external.com/x") + linkTo("http://www.external.com/y");
+//pages[Z]
+//   = "";
 
-describe("recursiveSearchLinks", function() {
-  it("recursive search links", function(done) {
-    mockUrls(pages);
+//var pageWithHash = {};
+//pageWithHash[ROOT]
+//  = linkTo("#a");
 
-    searchingLinks(ROOT, ROOT, 10)
-       .then(function(links) {
-         assert.deepEqual(links, {
-           internal: [A, B, C],
-           external: [Y, X, Z]
-         });
-         done();
-       })
-       .catch(function(err) {
-         done(err);
-       });
+//var pages = {};
+//pages[ROOT] = linkTo("/a");
+
+describe("searchingLinks", function() {
+  it("returns empty model if no links", function() {
+    searchingLinks(ROOT)
   });
 
-  it("recursive search links with recursive limit", function(done) {
-    mockUrls(pages);
-
-    searchingLinks(ROOT, ROOT, 1)
-       .then(function(links) {
-         assert.deepEqual(links, {
-           internal: [A, B],
-           external: [Y]
-         });
-         nock.cleanAll();
-         done();
-       })
-       .catch(function(err) {
-         nock.cleanAll();
-         done(err);
-       });
-  });
+  //it("recursive search links", function(done) {
+  //  mockUrls(pages);
+  //
+  //  searchingLinks(ROOT, ROOT, 10)
+  //     .then(function(links) {
+  //       assert.deepEqual(links, {
+  //         internal: [A, B, C],
+  //         external: [Y, X, Z]
+  //       });
+  //       done();
+  //     })
+  //     .catch(function(err) {
+  //       done(err);
+  //     });
+  //});
+  //
+  //it("recursive search links with recursive limit", function(done) {
+  //  mockUrls(pages);
+  //
+  //  searchingLinks(ROOT, ROOT, 1)
+  //     .then(function(links) {
+  //       assert.deepEqual(links, {
+  //         internal: [A, B],
+  //         external: [Y]
+  //       });
+  //       nock.cleanAll();
+  //       done();
+  //     })
+  //     .catch(function(err) {
+  //       nock.cleanAll();
+  //       done(err);
+  //     });
+  //});
+  //
+  //it("exclude urls with hash", function(done) {
+  //  mockUrls(pageWithHash);
+  //
+  //  searchingLinks(ROOT, ROOT)
+  //     .then(function(links) {
+  //       assert.deepEqual(links, {
+  //         internal: [],
+  //         external: []
+  //       });
+  //     })
+  //     .catch(function(err) {
+  //       done(err);
+  //     });
+  //});
 });
 
 function mockUrls(pages) {
