@@ -2,76 +2,68 @@ var downloadPage = require("../../src/downloadPage");
 var getAllLinks = require("../../src/link/getAllLinks");
 var sortLinksByOrigin = require("../../src/link/sortLinksByOrigin");
 
-function searchingLinks(rootUrl, url, maxRecursiveLevel, links, recursiveLevel, isInternal) {
-  //if(typeof recursiveLevel === "undefined")
-  //  recursiveLevel = 0;
-  //if(typeof links === "undefined") {
-  //  links = {
-  //    internal: {},
-  //    external: {}
-  //  };
-  //}
-  //
-  //if(recursiveLevel > maxRecursiveLevel)
-  //  return Promise.resolve(dictsToArray(links));
-  //
-  //var p = new Promise(function(resolve, reject) {
-  //  var nonSeenYet = !(url in links.internal || url in links.external);
-  //  if(nonSeenYet) {
-  //
-  //    if(recursiveLevel > 0) {
-  //      if(isInternal)
-  //        links.internal[url] = url;
-  //      /*else
-  //        links.external[url] = url;*/
-  //    }
-  //
-  //    downloadPage(url, function(content) {
-  //      var promises = [];
-  //      var pageLinks = sortLinksByOrigin(getAllLinks(content), rootUrl);
-  //      pageLinks.internal.forEach(function(link) {
-  //        processLink(link, true);
-  //      });
-  //      pageLinks.external.forEach(function(link) {
-  //        //processLink(link, false);
-  //        links.external[link] = link;
-  //      });
-  //
-  //      Promise.all(promises)
-  //         .then(function() {
-  //           resolve(dictsToArray(links));
-  //         })
-  //         .catch(function() {
-  //           reject();
-  //         });
-  //
-  //      function processLink(link, isInternal) {
-  //        var nonSeenYet = !(link in pageLinks.internal || link in pageLinks.external);
-  //        if(nonSeenYet/* && link.indexOf("#") === -1*/) {
-  //          var p = searchingLinks(rootUrl, link, maxRecursiveLevel, links, recursiveLevel + 1, isInternal);
-  //          promises.push(p);
-  //        }
-  //      }
-  //    });
-  //  }
-  //  else {
-  //    resolve();
-  //  }
-  //});
-  //return p;
+function searchingLinks(rootUrl) {
+  var args = {
+    rootUrl: rootUrl,
+    result: {
+      internal: [],
+      external: []
+    }
+  };
+  return recursive(args);
 }
 
-function dictsToArray(links) {
-  var ret = {
-    internal: [],
-    external: []
-  };
+function recursive(args) {
+  var promise = new Promise(function(resolve, reject) {
 
-  for(var link in links.internal)
-    ret.internal.push(link);
-  for(var link in links.external)
-    ret.external.push(link);
-  return ret;
+    downloadPage(args.rootUrl, function(content) {
+
+      args.resolve = resolve;
+      args.reject = reject;
+      args.content = content;
+      searchPage(args);
+
+    });
+
+  });
+  return promise;
+}
+
+function searchPage(args, content) {
+  var allLinks = getAllLinks(args.content);
+  args.links = sortLinksByOrigin(allLinks, args.rootUrl);
+  args.promises = [];
+
+  processInternalLinks(args);
+  resolveAll(args);
+}
+
+function processInternalLinks(args) {
+  args.links.internal.forEach(function(link) {
+    processInternalLink(args, link);
+  });
+}
+
+function processInternalLink(args, link) {
+  args.result.internal.push(link);
+  args.promises.push(recursive({
+    rootUrl: link,
+    result: args.result
+  }));
+}
+
+function resolveAll(args) {
+  Promise.all(args.promises)
+     .then(function() {
+       args.resolve(args.result);
+     })
+     .catch(function(err) {
+       args.reject(err);
+     });
+}
+
+function PageProcessor {
+
 }
 
 module.exports = searchingLinks;

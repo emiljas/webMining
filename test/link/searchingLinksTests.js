@@ -1,17 +1,12 @@
 var chai = require("chai");
+var chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
 var assert = chai.assert;
 var nock = require("nock");
 var url = require("url");
 var searchingLinks = require("../../src/link/searchingLinks");
 
-var ROOT = "http://www.internal.com";
-var A = "http://www.internal.com/a";
-var B = "http://www.internal.com/b";
-var C = "http://www.internal.com/c";
-
-var X = "http://www.external.com/x";
-var Y = "http://www.external.com/y";
-var Z = "http://www.external.com/z";
+var downloadPage = require("../../src/downloadPage");
 
 //var pages = {};
 //pages[ROOT]
@@ -33,62 +28,50 @@ var Z = "http://www.external.com/z";
 //pageWithHash[ROOT]
 //  = linkTo("#a");
 
-//var pages = {};
-//pages[ROOT] = linkTo("/a");
+var ROOT = "http://www.internal.com";
+var A = "http://www.internal.com/a";
+var B = "http://www.internal.com/b";
+var C = "http://www.internal.com/c";
+
+var X = "http://www.external.com/x";
+var Y = "http://www.external.com/y";
+var Z = "http://www.external.com/z";
+
+var emptyPage   = {};
+emptyPage[ROOT] = "";
+
+var pages   = {};
+pages[ROOT] = linkTo("/a");
+pages[A]    = linkTo("/b") + linkTo("/c");
+pages[B]    = "";
+pages[C]    = "";
 
 describe("searchingLinks", function() {
-  it("returns empty model if no links", function() {
-    searchingLinks(ROOT)
+  beforeEach(function() {
+    nock.cleanAll();
   });
 
-  //it("recursive search links", function(done) {
-  //  mockUrls(pages);
-  //
-  //  searchingLinks(ROOT, ROOT, 10)
-  //     .then(function(links) {
-  //       assert.deepEqual(links, {
-  //         internal: [A, B, C],
-  //         external: [Y, X, Z]
-  //       });
-  //       done();
-  //     })
-  //     .catch(function(err) {
-  //       done(err);
-  //     });
-  //});
-  //
-  //it("recursive search links with recursive limit", function(done) {
-  //  mockUrls(pages);
-  //
-  //  searchingLinks(ROOT, ROOT, 1)
-  //     .then(function(links) {
-  //       assert.deepEqual(links, {
-  //         internal: [A, B],
-  //         external: [Y]
-  //       });
-  //       nock.cleanAll();
-  //       done();
-  //     })
-  //     .catch(function(err) {
-  //       nock.cleanAll();
-  //       done(err);
-  //     });
-  //});
-  //
-  //it("exclude urls with hash", function(done) {
-  //  mockUrls(pageWithHash);
-  //
-  //  searchingLinks(ROOT, ROOT)
-  //     .then(function(links) {
-  //       assert.deepEqual(links, {
-  //         internal: [],
-  //         external: []
-  //       });
-  //     })
-  //     .catch(function(err) {
-  //       done(err);
-  //     });
-  //});
+  it("returns empty model if empty page", function(done) {
+    mockUrls(emptyPage);
+
+    var result = searchingLinks(ROOT);
+    assert.eventually.deepEqual(result, {
+           internal: [],
+           external: []
+    }).notify(done);
+  });
+
+  it("searches for internal links", function(done) {
+    mockUrls(pages);
+
+    var result = searchingLinks(ROOT);
+    assert.eventually.deepEqual(result, {
+      internal: [A, B, C],
+      external: []
+    }).notify(done);
+  });
+
+  //TODO: breaks links
 });
 
 function mockUrls(pages) {
