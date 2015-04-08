@@ -7,20 +7,14 @@ function downloadPage(url, callback) {
   request.get({
        uri: url,
        encoding: null
-     }, function (err, res, body) {
-       try {
-         var encoding = charset(res.headers, body);
-         var content;
-         if(encoding != null)
-           content = iconv.decode(body, encoding);
-         else
-           content = body.toString();
-         callback(content);
-       }
-       catch(err) {
-         //console.log(url);
-         throw err;
-       }
+     }, function(err, res, body) {
+       var encoding = charset(res.headers, body);
+       var content;
+       if(encoding != null)
+         content = iconv.decode(body, encoding);
+       else
+         content = body.toString();
+       callback(content);
      }
   );
 

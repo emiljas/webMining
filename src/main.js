@@ -61,16 +61,29 @@
 
 
 
+
+
 var fs = require("fs");
 var path = require("path");
 var url = process.argv[2];
 var searchingLinks = require("./link/searchingLinks");
-searchingLinks(url, url, 1).then(function(links) {
-  console.log(links, "WORKS");
-  fs.writeFile(path.resolve(process.cwd(), "tmp/internalLinks.txt"), links.internal, function (err) {
-    console.log("save 1");
-  });
-  fs.writeFile(path.resolve(process.cwd(), "tmp/externalLinks.txt"), links.external, function (err) {
-    console.log("save 2");
-  });
+searchingLinks(url, {
+  maxRecursionLevel: 2
+}).then(function(result) {
+
+  console.log("internal: " + result.internal.length);
+  console.log("e.g. "      + result.internal[0]);
+  console.log("external: " + result.external.length);
+  console.log("e.g. "      + result.external[0]);
+  console.log("errors: "   + result.logs.length);
+  if(result.logs.length > 0)
+    console.log("e.g. "    + result.logs[0].url);
+
+  //console.log(links, "WORKS");
+  //fs.writeFile(path.resolve(process.cwd(), "tmp/internalLinks.txt"), links.internal, function (err) {
+  //  console.log("save 1");
+  //});
+  //fs.writeFile(path.resolve(process.cwd(), "tmp/externalLinks.txt"), links.external, function (err) {
+  //  console.log("save 2");
+  //});
 });
