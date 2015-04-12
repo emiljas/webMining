@@ -76,8 +76,15 @@ searchingLinks(url, {
   console.log("external: " + result.external.length);
   console.log("e.g. "      + result.external[0]);
   console.log("errors: "   + result.logs.length);
-  if(result.logs.length > 0)
-    console.log("e.g. "    + result.logs[0].url);
+
+  console.log();
+
+  //result.logs.forEach(function(log) {
+  //  console.log(log);
+  //});
+
+  //if(result.logs.length > 0)
+  //  console.log("e.g. "    + result.logs[0].url);
 
   //console.log(links, "WORKS");
   //fs.writeFile(path.resolve(process.cwd(), "tmp/internalLinks.txt"), links.internal, function (err) {
@@ -86,4 +93,6 @@ searchingLinks(url, {
   //fs.writeFile(path.resolve(process.cwd(), "tmp/externalLinks.txt"), links.external, function (err) {
   //  console.log("save 2");
   //});
+}).catch(function() {
+  console.log("CATCH");
 });

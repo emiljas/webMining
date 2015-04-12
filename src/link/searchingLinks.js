@@ -49,21 +49,43 @@ function PageProcessor(args) {
     var promise = new Promise(function(resolve, reject) {
       self.resolve = resolve;
       self.reject = reject;
-      if(self.currentRecursionLevel > self.maxRecursionLevel)
+
+      if(self.currentRecursionLevel > self.maxRecursionLevel) {
+        self.isDone = true;
+
         self.resolve(self.result);
-      else if(self.visitedLinks.isVisited(self.url))
+      }
+      else if(self.visitedLinks.isVisited(self.url)) {
+        self.isDone = true;
+
         self.resolve(self.result);
+      }
       else {
         self.visitedLinks.add(self.url);
-        downloadingPage(self.url)
-           .then(function(content) {
-             self.content = content;
-             self.searchPage();
-           })
-           .catch(function(err) {
-             self.logError(err);
-           });
+
+        waitOrDo();
+
+        function waitOrDo() {
+          if(PageProcessor.requests > PageProcessor.maxRequests)
+            setTimeout(waitOrDo, 1000);
+          else {
+            PageProcessor.requests++;
+            downloadingPage(self.url)
+               .then(function(content) {
+                 PageProcessor.requests--;
+
+                 self.content = content;
+                 self.searchPage();
+               })
+               .catch(function(err) {
+                 PageProcessor.requests--;
+
+                 self.logError(err);
+               });
+          }
+        }
       }
+
     });
     return promise;
   };
@@ -95,6 +117,7 @@ function PageProcessor(args) {
 
   this.processInternalLink = function(link) {
     this.result.internal.push(link);
+
     var processing = PageProcessor.processingPage({
       rootUrl               : this.rootUrl,
       url                   : link,
@@ -116,9 +139,15 @@ function PageProcessor(args) {
     Promise.all(self.promises)
        .then(function() {
          self.resolve(self.result);
+       })
+       .catch(function() {
+         self.resolve(self.result);
        });
   }
 }
+
+PageProcessor.requests = 0;
+PageProcessor.maxRequests = 5;
 
 PageProcessor.processingPage = function(args) {
   var processor = new PageProcessor(args);

@@ -6,8 +6,12 @@ function downloadingPage(url) {
   return new Promise(function(resolve, reject) {
     request.get({
          uri: url,
-         encoding: null
+         encoding: null,
+         timeout: 10000
        }, function(err, res, body) {
+         if(err)
+          reject(err);
+
          try {
            var encoding = charset(res.headers, body);
            var content;
@@ -21,7 +25,9 @@ function downloadingPage(url) {
            reject(err);
          }
        }
-    );
+    ).on("error", function(err) {
+         reject(err);
+     });
   });
 }
 
