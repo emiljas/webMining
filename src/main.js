@@ -63,36 +63,38 @@
 
 
 
-var fs = require("fs");
-var path = require("path");
-var url = process.argv[2];
-var searchingLinks = require("./link/searchingLinks");
-searchingLinks(url, {
-  maxRecursionLevel: 2
-}).then(function(result) {
 
-  console.log("internal: " + result.internal.length);
-  console.log("e.g. "      + result.internal[0]);
-  console.log("external: " + result.external.length);
-  console.log("e.g. "      + result.external[0]);
-  console.log("errors: "   + result.logs.length);
+//var fs = require("fs");
+//var path = require("path");
+//var url = process.argv[2];
+//var searchingLinks = require("./link/searchingLinks");
+//searchingLinks(url, {
+//  maxRecursionLevel: 2
+//}).then(function(result) {
+//
+//  console.log("internal: " + result.internal.length);
+//  console.log("e.g. "      + result.internal[0]);
+//  console.log("external: " + result.external.length);
+//  console.log("e.g. "      + result.external[0]);
+//  console.log("errors: "   + result.logs.length);
+//
+//  fs.writeFile(path.resolve(process.cwd(), "tmp/internalLinks.txt"), result.internal, function (err) {
+//    console.log("saving internal links to file - done");
+//  });
+//  fs.writeFile(path.resolve(process.cwd(), "tmp/externalLinks.txt"), result.external, function (err) {
+//    console.log("saving external links to file - done");
+//  });
+//}).catch(function(err) {
+//  console.log(err);
+//});
 
-  console.log();
 
-  //result.logs.forEach(function(log) {
-  //  console.log(log);
-  //});
 
-  //if(result.logs.length > 0)
-  //  console.log("e.g. "    + result.logs[0].url);
 
-  //console.log(links, "WORKS");
-  //fs.writeFile(path.resolve(process.cwd(), "tmp/internalLinks.txt"), links.internal, function (err) {
-  //  console.log("save 1");
-  //});
-  //fs.writeFile(path.resolve(process.cwd(), "tmp/externalLinks.txt"), links.external, function (err) {
-  //  console.log("save 2");
-  //});
-}).catch(function() {
-  console.log("CATCH");
-});
+
+
+
+
+
+
+//searcher
