@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucene", "Lucene\Lucene.csproj", "{4D8C612B-2382-42C8-B80D-F740D5AF4D5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuceneTests", "LuceneTests\LuceneTests.csproj", "{F704E217-EB08-4220-8479-B4A1290215CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D8C612B-2382-42C8-B80D-F740D5AF4D5F}.Debug|x86.ActiveCfg = Debug|x86
+		{4D8C612B-2382-42C8-B80D-F740D5AF4D5F}.Debug|x86.Build.0 = Debug|x86
+		{4D8C612B-2382-42C8-B80D-F740D5AF4D5F}.Release|x86.ActiveCfg = Release|x86
+		{4D8C612B-2382-42C8-B80D-F740D5AF4D5F}.Release|x86.Build.0 = Release|x86
+		{F704E217-EB08-4220-8479-B4A1290215CB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F704E217-EB08-4220-8479-B4A1290215CB}.Debug|x86.Build.0 = Debug|Any CPU
+		{F704E217-EB08-4220-8479-B4A1290215CB}.Release|x86.ActiveCfg = Release|Any CPU
+		{F704E217-EB08-4220-8479-B4A1290215CB}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
