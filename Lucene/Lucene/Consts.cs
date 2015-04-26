@@ -6,6 +6,7 @@ namespace Lucene
 	{
 		public static readonly string IndexPath = "/media/emil/SanDisk";
 		public static readonly string GutenbergBooksPath = "/home/emil/Pulpit/gutenberg/pgdvd042010";
+		public static Lucene.Net.Util.Version LuceneVersion = Lucene.Net.Util.Version.LUCENE_30;
 	}
 }
 

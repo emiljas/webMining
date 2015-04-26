@@ -40,11 +40,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearcherTests.cs" />
+    <Compile Include="GutenbergBooksParserTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="gutenberg\1\0\10001\Apocol.ZIP" />
+    <None Include="gutenberg\1\OldBabyl.ZIP" />
+    <None Include="gutenberg\2\20001\EnglishSpy.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="gutenberg\" />
+    <Folder Include="gutenberg\1\" />
+    <Folder Include="gutenberg\2\" />
+    <Folder Include="gutenberg\1\0\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lucene\Lucene.csproj">
+      <Project>{4D8C612B-2382-42C8-B80D-F740D5AF4D5F}</Project>
+      <Name>Lucene</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
