@@ -24,7 +24,6 @@ namespace LuceneTests
 
 			Assert.AreEqual (1, books.Count);
 			Assert.AreEqual ("How to cook", books [0].Title);
-			Assert.AreEqual ("How to cook's content", books [0].Content);
 		}
 	}
 }

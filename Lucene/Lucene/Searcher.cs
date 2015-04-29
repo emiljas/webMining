@@ -23,7 +23,8 @@ namespace Lucene
 
 			StandardAnalyzer analyzer = new StandardAnalyzer(Consts.LuceneVersion);
 
-			Query q = new QueryParser(Consts.LuceneVersion, "title", analyzer).Parse(query);
+			Query q = /*new QueryParser(Consts.LuceneVersion, "title", analyzer)*/
+				new MultiFieldQueryParser (Consts.LuceneVersion, new string[]{ /*"title",*/ "content" }, analyzer).Parse(query);
 
 			int hitsPerPage = 5;
 

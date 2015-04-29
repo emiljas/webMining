@@ -7,6 +7,8 @@ namespace Lucene
 {
 	public class GutenbergBooksParser
 	{
+		private static System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex ("Title: .+");
+
 		private string _path;
 		private List<string> _bookPaths = new List<string> ();
 
@@ -15,36 +17,40 @@ namespace Lucene
 			_path = path;
 		}
 
-		public List<Lucene.Book> Parse()
+		public void Parse(Action<Book> action)
 		{
-			var books = new List<Lucene.Book> ();
 			RecursiveSearch (_path);
 
 			foreach(var path in _bookPaths)
 			{
 				string content = ReadBookContent (path);
 
-				var regex = new System.Text.RegularExpressions.Regex ("Title: .+");
-				var match = regex.Match (content);
+				if (content != "") {
+					var match = regex.Match (content);
 
-				string title = match.Value.Replace ("Title: ", "").Replace("\r", "");
+					string title = match.Value.Replace ("Title: ", "").Replace("\r", "");
 
-				books.Add (new Lucene.Book (title, content));
+					action (new Lucene.Book (title, content));
+				}
 			}
-
-			return books;
 		}
 
 		private string ReadBookContent(string path)
 		{
-			using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read))
-			using (var zf = new ZipFile (fs)) {
+			if (path.ToLower ().EndsWith (".zip")) {
+				try {
+					using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read))
+					using (var zf = new ZipFile (fs)) {
 
-				foreach (var fileName in zf) {
-					var ze = zf.GetEntry (fileName.ToString ());
-					using (var s = zf.GetInputStream (ze)) {
-						return (new StreamReader (s)).ReadToEnd ();
+						foreach (var fileName in zf) {
+							var ze = zf.GetEntry (fileName.ToString ());
+							using (var s = zf.GetInputStream (ze)) {
+								return (new StreamReader (s)).ReadToEnd ();
+							}
+						}
 					}
+				} catch {
+					return "";
 				}
 			}
 			return "";

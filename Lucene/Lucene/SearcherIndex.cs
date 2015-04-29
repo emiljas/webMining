@@ -21,7 +21,7 @@ namespace Lucene
 		{
 			Document doc = new Document ();
 			doc.Add (new Field ("title", book.Title, Field.Store.YES, Field.Index.ANALYZED));
-			doc.Add (new Field ("content", book.Content, Field.Store.YES, Field.Index.NO));
+			doc.Add (new Field ("content", book.Content, Field.Store.NO, Field.Index.ANALYZED));
 			_indexWriter.AddDocument(doc);
 		}
 

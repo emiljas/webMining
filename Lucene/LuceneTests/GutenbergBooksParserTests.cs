@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace LuceneTests
 {
-
 	public class GutenbergBooksParserTests
 	{
 		[Test]
@@ -17,7 +16,10 @@ namespace LuceneTests
 			dir = dir.Substring (0, i);
 
 			var parser = new Lucene.GutenbergBooksParser (dir + "gutenberg");
-			var books = parser.Parse ();
+			var books = new List<Lucene.Book> ();
+			parser.Parse ((book) => {
+				books.Add(book);
+			});
 
 			Assert.AreEqual (3, books.Count);
 			List<string> titles = (from book in books
