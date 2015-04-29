@@ -17,14 +17,31 @@ namespace Lucene
 			_index = index;
 		}
 
-		public List<Book> Search(string query)
+		public List<Book> Search(QueryParams query)
 		{
 			var books = new List<Book> ();
 
 			StandardAnalyzer analyzer = new StandardAnalyzer(Consts.LuceneVersion);
 
-			Query q = /*new QueryParser(Consts.LuceneVersion, "title", analyzer)*/
-				new MultiFieldQueryParser (Consts.LuceneVersion, new string[]{ /*"title",*/ "content" }, analyzer).Parse(query);
+			var mainQuery = new BooleanQuery ();
+
+			Occur occur = query.LogicOperator == LogicOperator.And ? Occur.MUST : Occur.SHOULD;
+
+			if (query.IsTitleSearchingEnabled) {
+				var titleQuery = new TermQuery (new Term ("title", query.Input));
+				mainQuery.Add (titleQuery, occur);
+			}
+
+			if (query.IsContentSearchingEnabled) {
+				var contentQuery = new TermQuery (new Term ("content", query.Input));
+				mainQuery.Add (contentQuery, occur);
+			}
+
+
+//			Query q = /*new QueryParser(Consts.LuceneVersion, "title", analyzer)*/
+//				new MultiFieldQueryParser (Consts.LuceneVersion, new string[]{ /*"title",*/ "content" }, analyzer).Parse(query.Input);
+
+
 
 			int hitsPerPage = 5;
 
@@ -33,7 +50,7 @@ namespace Lucene
 
 			TopScoreDocCollector collector = TopScoreDocCollector.Create(hitsPerPage, true);
 
-			searcher.Search(q, collector);
+			searcher.Search(mainQuery, collector);
 
 			ScoreDoc[] hits = collector.TopDocs().ScoreDocs;
 

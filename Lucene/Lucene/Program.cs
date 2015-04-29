@@ -4,11 +4,14 @@ namespace Lucene
 {
 	class MainClass
 	{
-		private static bool isTitleSearchingEnabled = true;
-		private static bool isContentSearchingEnabled = false;
+		private static QueryParams query = new QueryParams();
 
 		public static void Main (string[] args)
 		{
+			query.IsTitleSearchingEnabled = true;
+			query.IsContentSearchingEnabled = true;
+			query.LogicOperator = LogicOperator.Or;
+
 			var index = Lucene.Net.Store.FSDirectory.Open (Consts.IndexPath);
 
 
@@ -35,27 +38,42 @@ namespace Lucene
 			while (true) {
 				Console.WriteLine ("t - toggle title searching");
 				Console.WriteLine ("c - toggle content searching");
+				if (query.IsTitleSearchingEnabled && query.IsContentSearchingEnabled)
+					Console.WriteLine ("l - and or or");
 				Console.WriteLine ("q - quit");
 
 				Console.WriteLine ();
-				Console.Write ((isTitleSearchingEnabled ? "[X]" : "[ ]") + " title");
-				Console.Write ("\t");
-				Console.Write ((isContentSearchingEnabled ? "[X]" : "[ ]") + " content");
+				Console.Write ((query.IsTitleSearchingEnabled ? "[X]" : "[ ]") + " title");
+				Console.Write ("     ");
+				Console.Write ((query.IsContentSearchingEnabled ? "[X]" : "[ ]") + " content");
+				if (query.IsTitleSearchingEnabled && query.IsContentSearchingEnabled) {
+					Console.Write ("     ");
+					Console.Write ((query.LogicOperator == LogicOperator.Or ? "[X]" : "[ ]") + " or");
+					Console.Write ("     ");
+					Console.Write ((query.LogicOperator == LogicOperator.And ? "[X]" : "[ ]") + " add");
+				}
 				Console.WriteLine ();
 
 				Console.Write ("input: ");
 				string input = Console.ReadLine ();
 
 				if (input == "t") {
-					isTitleSearchingEnabled = !isTitleSearchingEnabled;
+					query.IsTitleSearchingEnabled = !query.IsTitleSearchingEnabled;
 				} else if (input == "c") {
-					isContentSearchingEnabled = !isContentSearchingEnabled;
+					query.IsContentSearchingEnabled = !query.IsContentSearchingEnabled;
+				} else if(input == "l") {
+					query.LogicOperator = query.LogicOperator == LogicOperator.And ? LogicOperator.Or : LogicOperator.And;
+				} else if(input == "q") {
+					break;
 				} else {
-					var results = searcher.Search ("already");
+					query.Input = input;
+					var results = searcher.Search (query);
 					Console.WriteLine ("results: " + results.Count);
 					for (int i = 0; i < Math.Min (5, results.Count); i++)
 						Console.WriteLine (results [i].Title);
 				}
+				Console.WriteLine ("-----------------------------------------------");
+				Console.WriteLine ("-----------------------------------------------");
 				Console.WriteLine ();
 
 			}

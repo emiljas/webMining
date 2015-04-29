@@ -46,6 +46,8 @@
     <Compile Include="SearcherIndex.cs" />
     <Compile Include="Searcher.cs" />
     <Compile Include="GutenbergBooksParser.cs" />
+    <Compile Include="LogicOperator.cs" />
+    <Compile Include="QueryParams.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
